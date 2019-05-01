@@ -1,4 +1,4 @@
-# CRUD-CLI
-run:
-./main.py
+# CRUD-CLI 
+run: <br>
+./main.py <br> <br>
 and fun...?
