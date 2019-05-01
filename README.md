@@ -1,2 +1,4 @@
 # CRUD-CLI
-Static CRUD with Python
+run:
+./main.py
+and fun...?
