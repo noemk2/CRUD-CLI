@@ -1,26 +1,45 @@
 #!/usr/bin/env python
 import sys
+import csv
+import os
 #
 ##
 ###
 #####
 #######
-##########
+#DATA####
 ############
-clients = [
-    {
-        'name':'pablo',
-        'company': 'Google',
-        'email': 'pablo@google.com',
-        'position': 'Sofware enginner',
-    },
-    {
-        'name':'Ricardo',
-        'company': 'Facebook',
-        'email': 'pablo@facebook.com',
-        'position': 'Data enginner',
-    },
-]
+CLIENT_TABLE = '.clients.csv'
+CLIENT_SCHEMA = ['name', 'company', 'email','position']
+clients = []
+############
+##BASE###
+#######
+#####
+###
+##
+#
+def _initialize_clients_from_storage():
+    with open (CLIENT_TABLE, mode= 'r')as f:
+        reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA)
+        
+        for row in reader:
+            clients.append(row)
+#
+##
+###
+#####
+#######
+##CRUD###
+############
+def _save_clients_to_storage():
+    tmp_table_name = '{}.tmp'.format(CLIENT_TABLE)
+    with open(tmp_table_name, mode='w') as f:
+        writer = csv.DictWriter(f, fieldnames= CLIENT_SCHEMA)
+        writer.writerows(clients)
+
+        os.remove(CLIENT_TABLE)
+        os.rename(tmp_table_name, CLIENT_TABLE)
 ############
 ##########
 #CRUD###
@@ -45,7 +64,6 @@ def create_client(client):
 #"R" (read)#
 def read_clients():
     for idx, client in enumerate(clients, start=1):
-        # print(f"{idx}:{client['name']}")
         uid=idx
         name= client['name']
         company=client['company']
@@ -53,7 +71,7 @@ def read_clients():
         position=client['position']
         print(f"{uid} | {name} | {company} | {email} | {position}")
 ############
-#########
+##READ###
 #######
 ####
 ###
@@ -81,7 +99,7 @@ def delete_client(client_name):
     else:
         _not_client_name()
 ############
-#########
+###DEL###
 #######
 ####
 ###
@@ -170,6 +188,8 @@ def _newClient(client_name):
 
 #start comand's
 if __name__ == '__main__':
+    _initialize_clients_from_storage()
+
     _print_welcome()
     comand = input()
     comand = comand.upper()
@@ -180,6 +200,7 @@ if __name__ == '__main__':
         read_clients()
     #L
     elif comand == 'L':
+        # pass
         read_clients()
     #D
     elif comand == 'D':
@@ -199,7 +220,6 @@ if __name__ == '__main__':
     #S
     elif comand == 'S':
         client_name = _get_client_name()
-        #found puede ser true o false
         found = search_client(client_name)
 
         if found:
@@ -209,3 +229,5 @@ if __name__ == '__main__':
     #else
     else:
         print('Invalid comand')
+
+    _save_clients_to_storage()        
