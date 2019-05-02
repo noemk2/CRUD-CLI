@@ -1,71 +1,145 @@
 #!/usr/bin/env python
 import sys
-clients = 'pablo,ricardo,'
-
-#"C"
-def create_client(client_name):
+#
+##
+###
+#####
+#######
+##########
+############
+clients = [
+    {
+        'name':'pablo',
+        'company': 'Google',
+        'email': 'pablo@google.com',
+        'position': 'Sofware enginner',
+    },
+    {
+        'name':'Ricardo',
+        'company': 'Facebook',
+        'email': 'pablo@facebook.com',
+        'position': 'Data enginner',
+    },
+]
+############
+##########
+#CRUD###
+######
+####
+###
+##
+#"C" (cread)
+def create_client(client):
     global clients
 
-    if client_name not in clients:
-            clients += client_name
-            _add_semicolon()
+    if client not in clients:
+        clients.append(client)
     else:
         print('Client alredy is in the client\'s list')
-
- 
-#"U"
-def update_client(client_name, update_client_name):
+#
+##
+###
+#####
+#######
+##########
+#"R" (read)#
+def read_clients():
+    for idx, client in enumerate(clients, start=1):
+        # print(f"{idx}:{client['name']}")
+        uid=idx
+        name= client['name']
+        company=client['company']
+        email=client['email']
+        position=client['position']
+        print(f"{uid} | {name} | {company} | {email} | {position}")
+############
+#########
+#######
+####
+###
+##
+#"U*" (update)
+def update_client(client_name, newClient):
     global clients
-
-    if client_name in clients:
-            clients = clients.replace(client_name + ',', update_client_name+',')
+    indice = _get_index_client('name',client_name)
+    if indice >= 0:
+        clients[indice] = newClient
     else:
-            _not_client_name()
-
-
-#"D"
+        _not_client_name()
+#
+##
+###
+#####
+#######
+##########
+#"D*"(delete)
 def delete_client(client_name):
     global clients
-
-    if client_name in clients:
-            clients = clients.replace(client_name+ ',','')
+    index = _get_index_client('name',client_name)
+    if index >=0:
+        clients.pop(index)
     else:
-            _not_client_name()
-
-#"L"
-def list_clients():
+        _not_client_name()
+############
+#########
+#######
+####
+###
+##
+#---miscelaneas--
+#"Search"
+def search_client(client_name):
     global clients
 
-    print(clients)
-
-#"S"
-def search_client(client_name):
-    clients_list = clients.split(',')
-
-    for client in clients_list:
-        if client != client_name:
-            continue
-        else:
+    for client in clients:
+        if client_name == client['name']:
             return True
 
-#miscelaneas
-def _add_semicolon():
-    global clients
-
-    clients += ','
-
-
+#obtain index engine
+def _get_index_client(client_name,client):
+    indice = -1
+    for idx, clientes in enumerate(clients):
+        if client == clientes[client_name]:
+            indice = idx
+            break
+    return indice
+    
+#Welcome comand's           
 def _print_welcome():
-    print('WELCOME TO PLATZIVENTAS')
-    print('*'*50)
-    print('what would you like to do today?')
-    print('[C] Create client')
-    print('[L] List client')
-    print('[U] Update client')
-    print('[D] Delete client')
-    print('[S] Search client')
+    logo= '## WELCOME TO PLATZIVENTAS ##'
+    sause= '# what would you like to do today?'
+    for i in range(0,5):
+        print("#"*i)
+    print("#"*len(logo))
+    print(logo)
+    print("#"*len(logo))
+    for i in range(4,0,-1):
+        print("#"*i)
+    print(sause.upper())
+    for i in range(1,5):
+        print("#"*i)
+    print('*'*24)
+    print('*  [C] Create client   *')
+    print('*  [L] List client     *')
+    print('*  [U] Update client   *')
+    print('*  [D] Delete client   *')
+    print('*  [S] Search client   *')
+    print('*                      *')
+    print('*'*24)
 
+#cuestion field
+def _get_client_field(field_name,client_name):
+    field = None
+    if client_name == '':
+        while not field:
+            field = input(f'What is the client {field_name} create? ')
+    else:
+        while not field:
+            field = input(f'What is the new client {field_name}? ')    
 
+    return field
+
+#cuestion client name
 def _get_client_name():
     client_name = None
 
@@ -81,41 +155,47 @@ def _get_client_name():
 
     return client_name
 
-
+#answer not client
 def _not_client_name():
     return input('Client is not in clients list...')    
-#END miscelaneas
+    
+#object new client
+def _newClient(client_name):
+    return {
+            'name' : _get_client_field('name',client_name),
+            'company': _get_client_field('company',client_name),
+            'email': _get_client_field('email',client_name),
+            'position': _get_client_field('position',client_name),
+        }
 
-#star comand
+#start comand's
 if __name__ == '__main__':
     _print_welcome()
-
     comand = input()
     comand = comand.upper()
-
     #C
     if  comand == 'C':
-        client_name =_get_client_name()
-        create_client(client_name)
-        list_clients()
-
+        client = _newClient('')
+        create_client(client)
+        read_clients()
     #L
     elif comand == 'L':
-        list_clients()
-
+        read_clients()
     #D
     elif comand == 'D':
         client_name = _get_client_name()
         delete_client(client_name)
-        list_clients()
-
+        read_clients()
     #U
     elif comand == 'U':
         client_name = _get_client_name()
-        update_client_name = input("What is the update client name: ")
-        update_client(client_name, update_client_name)
-        list_clients()
-
+        option = search_client(client_name)
+        if option == True:
+            newClient = _newClient(client_name)
+            update_client(client_name, newClient)
+            read_clients()
+        else:
+            _not_client_name()
     #S
     elif comand == 'S':
         client_name = _get_client_name()
@@ -125,9 +205,7 @@ if __name__ == '__main__':
         if found:
             print('The client is in the client\'s list')
         else:
-            print('The client: {} is not in our client\'s list'.format(client_name))
-                #  print(f'The client {client_name} is not in our client\'s list')
-
+                print(f'The client {client_name} is not in our client\'s list')
     #else
     else:
         print('Invalid comand')
