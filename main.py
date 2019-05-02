@@ -2,6 +2,7 @@
 import sys
 import csv
 import os
+os.system("clear")
 #
 ##
 ###
@@ -144,6 +145,7 @@ def _print_welcome():
     print('*  [S] Search client   *')
     print('*                      *')
     print('*'*24)
+    print('SELECT: ')
 
 #cuestion field
 def _get_client_field(field_name,client_name):
@@ -188,6 +190,7 @@ def _newClient(client_name):
 
 #start comand's
 if __name__ == '__main__':
+    
     _initialize_clients_from_storage()
 
     _print_welcome()
