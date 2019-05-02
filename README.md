@@ -1,6 +1,11 @@
 # CRUD-CLI 
-run: <br>
+run: 
+ <br>
  1)touch .clients.csv
+ <br>
  2) chmod a+x ./main.py
- 3) ./main.py <br> <br>
+ <br>
+ 3) ./main.py 
+ <br> 
  4) and fun...?
+ <br>
